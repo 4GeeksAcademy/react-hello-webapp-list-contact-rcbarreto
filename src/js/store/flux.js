@@ -43,13 +43,13 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			getContacts: async () => {
 				
-				const resp = await fetch(process.env.BACKEND_URL + "agendas/rcbarreto");
+				const resp = await fetch("https://playground.4geeks.com/contact/" + "agendas/rcbarreto");
 			
 				try {
 
 				if (resp.status === 404) {
 					
-					const createResponse = await fetch(process.env.BACKEND_URL + "agendas/rcbarreto", {
+					const createResponse = await fetch("https://playground.4geeks.com/contact/" + "agendas/rcbarreto", {
 						method: 'POST', 
 						headers: {
 							'Content-Type': 'application/json',
@@ -60,7 +60,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					// Verificamos si la creación de la agenda fue exitosa
 					if (createResponse.ok) {
 						// Llamamos nuevamente para obtener los contactos después de crear la agenda
-						const newResp = await fetch(process.env.BACKEND_URL + "agendas/rcbarreto");
+						const newResp = await fetch("https://playground.4geeks.com/contact/" + "agendas/rcbarreto");
 						const newData = await newResp.json();
 						setStore({ contacts: newData.contacts });
 					} 
@@ -78,7 +78,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 				const myHeaders = new Headers();
 				myHeaders.append("Content-Type","application/json");
-				const resp = await fetch(process.env.BACKEND_URL+"agendas/rcbarreto/contacts", {
+				const resp = await fetch("https://playground.4geeks.com/contact/"+"agendas/rcbarreto/contacts", {
 					method: 'POST',
 					headers: myHeaders,
 					body: JSON.stringify(contact)
@@ -96,7 +96,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				
 				const myHeaders = new Headers();
 				myHeaders.append("Content-Type","application/json");
-				const resp = await fetch(process.env.BACKEND_URL+"agendas/rcbarreto/contacts/"+ contactID , {
+				const resp = await fetch("https://playground.4geeks.com/contact/"+"agendas/rcbarreto/contacts/"+ contactID , {
 					method: 'DELETE',
 					
 				});
@@ -113,7 +113,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				
 				const myHeaders = new Headers();
 				myHeaders.append("Content-Type","application/json");
-				const resp = await fetch(process.env.BACKEND_URL+"agendas/rcbarreto/contacts/"+ contact.id, {
+				const resp = await fetch("https://playground.4geeks.com/contact/"+"agendas/rcbarreto/contacts/"+ contact.id, {
 					method: 'PUT',
 					headers: myHeaders,
 					body: JSON.stringify(contact)
