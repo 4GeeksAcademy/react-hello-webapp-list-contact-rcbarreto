@@ -1,6 +1,7 @@
 import React , {useContext, useEffect, useState}from "react";
 import "../../styles/home.css";
 import {Context} from "../store/appContext.js";
+import { ContactCard } from "../component/card.js";
 
 export const Home = () => {
 
@@ -10,9 +11,13 @@ export const Home = () => {
 	
 	<div className="text-center mt-5">
     
+
+    
     {
       store.contacts.map((item, index)=>{
-        return <h1 key={index}> {item.name} </h1>
+        return <ContactCard key = {index} name ={item.name} phone = {item.phone} email = {item.email} address = {item.address} index = {index}/>
+        
+        //<h1 key={index}> {item.name} </h1>
       })
     }
 

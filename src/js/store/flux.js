@@ -47,6 +47,23 @@ const getState = ({ getStore, getActions, setStore }) => {
 				const data = await resp.json();
 				setStore({contacts: data.contacts});
 
+			},
+
+			createContact: async (contact)=>{
+
+				const myHeaders = new Headers();
+				myHeaders.append("Content-Type","application/json");
+				const resp = await fetch(process.env.BACKEND_URL+"agendas/rcbarreto/contacts", {
+					method: 'POST',
+					headers: myHeaders,
+					body: JSON.stringify(contact)
+				});
+				
+				if(resp.ok){
+					
+					await getActions().getContacts()
+				}
+
 			}
 		}
 	};
