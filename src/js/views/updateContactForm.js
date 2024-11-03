@@ -1,12 +1,19 @@
-import React, { useContext, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { Context } from "../store/appContext";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
-export const CreateContact = () => {
+export const UpdateContact = () => {
     const { actions } = useContext(Context);
     const navigate = useNavigate();
-    const [contact, setContact] = useState({});
-    const [error, setError] = useState(''); // Estado para el mensaje de error
+    const location = useLocation(); // Obtener la ubicación
+    const [error, setError] = useState('');
+    const { name, phone, email, address, id } = location.state || {}; // Extraer los datos del estado
+    const [contact, setContact] = useState({ name, phone, email, address, id }); // Inicializar el estado
+
+    useEffect(() => {
+        // Si la ubicación cambia, actualizar el estado del contacto
+        setContact({ name, phone, email, address, id });
+    }, [name, phone, email, address, id]); // Añadir 'id' al array de dependencias
 
     const manejoErorVacio = async () => {
         // Validar que no haya campos vacíos
@@ -18,22 +25,26 @@ export const CreateContact = () => {
         // Limpiar el mensaje de error si todos los campos están completos
         setError('');
 
-        // Llamar a la acción para crear el contacto
-        await actions.createContact(contact);
+        // Llamar a la acción para actualizar el contacto
+        await actions.updateContact(contact);
         navigate(-1); // Volver a la página anterior
     };
 
     return (
         <div className="container">
-            {error && <div className="alert alert-danger mt-3">{error}</div>} {/* Mostrar el mensaje de error con margen superior */}
+            <div className="col-auto">
+                <img className="rounded-circle ms-5" src={`https://i.pravatar.cc/150?img=${contact.id}`} alt="Perfil" />
+            </div>
+
+            {error && <div className="alert alert-danger mt-3">{error}</div>} {/* Mostrar mensaje de error */}
 
             <div className="mb-3">
-                <label className="form-label fw-bold">Full Name</label>
+                <label className="form-label fw-bold">Nombre</label>
                 <input 
                     onChange={(e) => setContact({ ...contact, name: e.target.value })} 
                     value={contact.name || ''} 
                     type="text" 
-                    className="form-control"  
+                    className="form-control" 
                     placeholder="Full Name"
                 />
             </div>
@@ -50,7 +61,7 @@ export const CreateContact = () => {
             </div>
 
             <div className="mb-3">
-                <label className="form-label fw-bold">Phone</label>
+                <label className="form-label fw-bold">Teléfono</label>
                 <input 
                     onChange={(e) => setContact({ ...contact, phone: e.target.value })} 
                     value={contact.phone || ''} 
@@ -61,7 +72,7 @@ export const CreateContact = () => {
             </div>
 
             <div className="mb-3">
-                <label className="form-label fw-bold">Address</label>
+                <label className="form-label fw-bold">Dirección</label>
                 <input 
                     onChange={(e) => setContact({ ...contact, address: e.target.value })} 
                     value={contact.address || ''} 
@@ -70,17 +81,17 @@ export const CreateContact = () => {
                     placeholder="Enter address"
                 />
             </div>
-                    
+
             <button 
                 onClick={manejoErorVacio} 
-                type="button" 
+                type="submit" 
                 className="btn btn-primary me-3"
             >
                 Save
             </button>
-           
+
             <Link to="/">
-                <button className="btn btn-primary">Back home</button>
+                <button className="btn btn-secondary">Back home</button>
             </Link>
         </div>
     );

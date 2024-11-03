@@ -42,12 +42,37 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 
 			getContacts: async () => {
+				
+				const resp = await fetch(process.env.BACKEND_URL + "agendas/rcbarreto");
+			
+				try {
 
-				const resp = await fetch(process.env.BACKEND_URL+"agendas/rcbarreto");
-				const data = await resp.json();
-				setStore({contacts: data.contacts});
-
+				if (resp.status === 404) {
+					
+					const createResponse = await fetch(process.env.BACKEND_URL + "agendas/rcbarreto", {
+						method: 'POST', 
+						headers: {
+							'Content-Type': 'application/json',
+						},
+						body: JSON.stringify({ name: "rcbarreto", contacts: [] }) 
+					});
+			
+					// Verificamos si la creación de la agenda fue exitosa
+					if (createResponse.ok) {
+						// Llamamos nuevamente para obtener los contactos después de crear la agenda
+						const newResp = await fetch(process.env.BACKEND_URL + "agendas/rcbarreto");
+						const newData = await newResp.json();
+						setStore({ contacts: newData.contacts });
+					} 
+				} else if (resp.ok) {
+					// Si ya esta creada, actualizamos el estado
+					const data = await resp.json();
+					setStore({ contacts: data.contacts });
+				} 
+			} catch (error) {
+			}
 			},
+			
 
 			createContact: async (contact)=>{
 
@@ -74,6 +99,24 @@ const getState = ({ getStore, getActions, setStore }) => {
 				const resp = await fetch(process.env.BACKEND_URL+"agendas/rcbarreto/contacts/"+ contactID , {
 					method: 'DELETE',
 					
+				});
+				
+				if(resp.ok){
+					
+					await getActions().getContacts()
+				}
+
+			},
+
+			updateContact: async (contact)=>{
+
+				
+				const myHeaders = new Headers();
+				myHeaders.append("Content-Type","application/json");
+				const resp = await fetch(process.env.BACKEND_URL+"agendas/rcbarreto/contacts/"+ contact.id, {
+					method: 'PUT',
+					headers: myHeaders,
+					body: JSON.stringify(contact)
 				});
 				
 				if(resp.ok){

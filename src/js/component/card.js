@@ -1,21 +1,23 @@
 import React, {useEffect, useState, useContext} from "react";
-import { Context } from "../store/appContext";
 import { Link , useNavigate } from "react-router-dom";
+import { Context } from "../store/appContext";
 import {DeleteContact} from "./deleteContact.js";
+import { UpdateContact } from "../views/updateContactForm.js";
 
 
 export const ContactCard = (props)=>{
 
-    const [showModal, setShowModal] = useState(false);
+    const [showDeleteModal, setShowDeleteModal] = useState(false); 
+    
     const { actions } = useContext(Context);
 
     return (
 
 
-        <div className="card p-3">
+        <div className="card p-3 border-start border-end mx-3">
             <div className="row g-0">
                 <div className="col-auto">
-                    <img className="rounded-circle" src={"https://i.pravatar.cc/150?img=" + props.id} />
+                    <img className="rounded-circle ms-5" src={"https://i.pravatar.cc/150?img=" + props.id} />
                 </div>
                 <div className="col">
                     <div className="card-body p-0 text-start ms-5 mt-4">
@@ -31,23 +33,37 @@ export const ContactCard = (props)=>{
                         </p>
                     </div>
                 </div>
-                <div className="col mt-4">
+                
+                <div className="col mt-4 d-flex justify-content-end me-3">
                     
-                    <i className="fa-solid fa-pen me-3"></i>
+                <Link 
+                        to={`/update/${props.id}`}  
+                        state={{ 
+                            name: props.name, 
+                            phone: props.phone, 
+                            email: props.email, 
+                            address: props.address, 
+                            id: props.id 
+                        }} 
+                        style={{ textDecoration: "none", color: "inherit" }}
+                    >
+                        <i className="fa-solid fa-pen me-3" style={{ cursor: "pointer" }} />
+                    </Link>
+                     
                     
                     <i
-                        onClick={() => setShowModal(true)} // Abre el modal
+                        onClick={() => setShowDeleteModal(true)} 
                         className="fa-solid fa-trash"
-                        style={{ cursor: "pointer" }} // Cambia el cursor a puntero
+                        style={{ cursor: "pointer" }} 
                     />
                      <DeleteContact
-                        show={showModal}
-                        onClose={() => setShowModal(false)}
+                        show={showDeleteModal}
+                        onClose={() => setShowDeleteModal(false)}
                         onConfirm={async () => {
-                            await actions.deleteContact(props.id); // Llama a deleteContact con el ID
+                            await actions.deleteContact(props.id); 
                             
-                            setShowModal(false); // Cierra el modal después de eliminar
-                        }} // Pasa la función de confirmación
+                            setShowDeleteModal(false); 
+                        }} 
                     />
                        
 

@@ -4,10 +4,7 @@ import { Link } from "react-router-dom";
 export const Navbar = () => {
 	return (
 		<nav className="navbar navbar-light bg-light mb-3">
-			<Link to="/">
-				<span className="navbar-brand mb-0 h1">Back to start</span>
-			</Link>
-			<div className="ml-auto">
+			<div className="ms-auto me-5">
 				<Link to="/create">
 					<button className="btn btn-success">Add new contact</button>
 				</Link>
