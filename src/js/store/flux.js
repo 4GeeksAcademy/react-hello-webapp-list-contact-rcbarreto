@@ -64,6 +64,23 @@ const getState = ({ getStore, getActions, setStore }) => {
 					await getActions().getContacts()
 				}
 
+			},
+
+			deleteContact: async (contactID)=>{
+
+				
+				const myHeaders = new Headers();
+				myHeaders.append("Content-Type","application/json");
+				const resp = await fetch(process.env.BACKEND_URL+"agendas/rcbarreto/contacts/"+ contactID , {
+					method: 'DELETE',
+					
+				});
+				
+				if(resp.ok){
+					
+					await getActions().getContacts()
+				}
+
 			}
 		}
 	};
